@@ -24,7 +24,7 @@ Vec2 Vec2_sub(Vec2 v1, Vec2 v2)
 
 Vec2 Vec2_scale(Vec2 v1, float s)
 {
-    Vec2 v = {.x = v.x * s, .y = v.y * s};
+    Vec2 v = {.x = v1.x * s, .y = v1.y * s};
     return v;
 }
 
