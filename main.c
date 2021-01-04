@@ -36,15 +36,19 @@ int main(int argc, char *argv[])
     Vec2 mousePos = Vec2_set(0.f, 0.f);
 
     // Creation des balles
-    Ball *ball = Scene_addBall(scene, Vec2_set(4.0f, 5.0f));
-    Ball *ball_2 = Scene_addBall(scene, Vec2_set(6.0f, 5.0f));
+    Ball *ball = Scene_addBall(scene, Vec2_set(4.0f, 1.0f));
+    Ball *ball_2 = Scene_addBall(scene, Vec2_set(6.0f, 1.0f));
+    Ball *ball_3 = Scene_addBall(scene, Vec2_set(5.0f, 2.0f));
 
     // Propriétés physique des balles
     ball->velocity = Vec2_set(0.f, 0.f);
     ball_2->velocity = Vec2_set(0.f, 0.f);
+    ball_3->velocity = Vec2_set(0.f, 0.f);
 
     // Connexion des balles
-    Ball_connect(ball, ball_2, 5);
+    Ball_connect(ball, ball_2, 1);
+    Ball_connect(ball_3, ball_2, 1);
+    Ball_connect(ball, ball_3, 1);
 
     float timeStep = 1.f / 100.f;
     float accumulator = 0.f;
