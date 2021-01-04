@@ -55,14 +55,28 @@ int main(int argc, char *argv[])
 
     Timer_start(timer);
     int quitLoop = 0;
+
+    Vec2 cursor_position;
+    BallQuery neareast_cursor_ball;
+
     while (!quitLoop)
     {
+        // Recupere la position du curseur dans le monde
+        cursor_position.x = mousePos.x;
+        cursor_position.y = mousePos.y;
+
+        // Recupere la balle la plus proche du curseur
+        neareast_cursor_ball = Scene_getNearestBall(scene, cursor_position);
+        printf("(%f)\n",neareast_cursor_ball.ball->position.x);
+
+
         SDL_Event evt;
         int mouseClick = 0;
         Timer_update(timer);
 
         while (SDL_PollEvent(&evt))
         {
+
             SDL_Scancode scanCode;
             SDL_MouseButtonEvent mouseButton;
 
