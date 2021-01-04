@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
 
     Vec2 cursor_position;
     BallQuery neareast_cursor_ball;
+    int x, y;
 
     while (!quitLoop)
     {
@@ -114,6 +115,12 @@ int main(int argc, char *argv[])
                     mouseClick = 1;
                 break;
             }
+
+            if(mouseClick){
+              Ball *ball = Scene_addBall(scene, Vec2_set(mousePos.x, mousePos.y));
+              Ball *neareast_ball = Scene_addBall(scene, Vec2_set(neareast_cursor_ball.ball->position.x, neareast_cursor_ball.ball->position.y));
+              Ball_connect(ball, neareast_cursor_ball.ball, 1);
+            }
         }
 
         if (quitLoop)
@@ -131,10 +138,8 @@ int main(int argc, char *argv[])
 
         // Recupere la balle la plus proche du curseur
         neareast_cursor_ball = Scene_getNearestBall(scene, cursor_position);
-        int x, y;
+        // Transforme les coordonnées de la balle de metres vers pixels
         Camera_worldToView(camera, neareast_cursor_ball.ball->position, &x, &y);
-
-        printf("(%f)\n",neareast_cursor_ball.ball->position.x);
 
         // Update the physics engine
         accumulator += Timer_getDelta(timer);
