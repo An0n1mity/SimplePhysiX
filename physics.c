@@ -16,7 +16,7 @@ void Ball_updateVelocity(Ball *ball, float timeStep)
   //Calcul des forces appliqués
   Vec2 gravity = Vec2_set(0, -9.81);
   Vec2 weight = Vec2_scale(gravity, mass);
-  Vec2 Friction = Vec2_scale(velocity, friction * -1);
+  Vec2 Friction = Vec2_scale(velocity, friction);
   Vec2 somme_forces = Vec2_add(weight, Friction);
 
   //Calcul de l'acceleration de la balle
@@ -26,7 +26,8 @@ void Ball_updateVelocity(Ball *ball, float timeStep)
   Vec2 Velocity = Vec2_add(velocity, Vec2_scale(acceleration, timeStep));
 
   //Update de la balle
-  ball->velocity = Velocity;
+  
+    ball->velocity = Velocity;
 
 }
 
@@ -40,11 +41,6 @@ void Ball_updatePosition(Ball *ball, float timeStep)
 
   //Calcul de la position de la balle
   Vec2 Position = Vec2_add(position, Vec2_scale(velocity, timeStep));
-
-  if(Position.y < 0){
-	  ball->velocity.y *= -1;
-	  Position.y = 0;
-  }
 
   //Update de la balle
   ball->position = Position;
