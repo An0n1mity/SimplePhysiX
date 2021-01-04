@@ -41,8 +41,9 @@ void Ball_updatePosition(Ball *ball, float timeStep)
   //Calcul de la position de la balle
   Vec2 Position = Vec2_add(position, Vec2_scale(velocity, timeStep));
 
-  if (Position.y < 0){
-    Position.y = 0;
+  if(Position.y < 0){
+	  ball->velocity.y *= -1;
+	  Position.y = 0;
   }
 
   //Update de la balle
