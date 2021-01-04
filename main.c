@@ -61,14 +61,6 @@ int main(int argc, char *argv[])
 
     while (!quitLoop)
     {
-        // Recupere la position du curseur dans le monde
-        cursor_position.x = mousePos.x;
-        cursor_position.y = mousePos.y;
-
-        // Recupere la balle la plus proche du curseur
-        neareast_cursor_ball = Scene_getNearestBall(scene, cursor_position);
-        printf("(%f)\n",neareast_cursor_ball.ball->position.x);
-
 
         SDL_Event evt;
         int mouseClick = 0;
@@ -133,6 +125,17 @@ int main(int argc, char *argv[])
         // Get the mouse position
         Camera_viewToWorld(camera, mouseX, mouseY, &mousePos);
 
+        // Recupere la position du curseur dans le monde
+        cursor_position.x = mousePos.x;
+        cursor_position.y = mousePos.y;
+
+        // Recupere la balle la plus proche du curseur
+        neareast_cursor_ball = Scene_getNearestBall(scene, cursor_position);
+        int x, y;
+        Camera_worldToView(camera, neareast_cursor_ball.ball->position, &x, &y);
+
+        printf("(%f)\n",neareast_cursor_ball.ball->position.x);
+
         // Update the physics engine
         accumulator += Timer_getDelta(timer);
         while (accumulator >= timeStep)
@@ -142,6 +145,7 @@ int main(int argc, char *argv[])
         }
 
         // Render the scene
+        Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 255, 255, 255));
         Scene_renderBalls(scene);
         Renderer_update(renderer);
     }
