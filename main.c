@@ -54,7 +54,6 @@ int main(int argc, char *argv[])
     int quitLoop = 0;
 
     Vec2 cursor_position;
-    BallQuery neareast_cursor_ball;
     BallQuery nearest_cursor_balls[2];
     int x, y;
 
@@ -118,7 +117,6 @@ int main(int argc, char *argv[])
             {
                 // On crée une balle au niveau du curseur
                 Ball *ball = Scene_addBall(scene, Vec2_set(mousePos.x, mousePos.y));
-                printf("Vous venez de placer une balle !");
                 // Hauteur maximum de la balle posée
                 /*if
                 else
@@ -126,12 +124,14 @@ int main(int argc, char *argv[])
 
 
                 // Si trop de ressort relié à la balle la plus proche
-                if(Ball_connect(ball, neareast_cursor_ball.ball, neareast_cursor_ball.distance))
-                {
-                    printf("Too many springs !\n");
+                for (int i = 0; i < 2; i++) {
+                    if(Ball_connect(ball, nearest_cursor_balls[i].ball, neareast_cursor_balls.distance))
+                    {
+                        printf("Too many springs !\n");
 
-                    //Retirer la nouvelle balle
-                    Scene_removeBall(scene, ball);
+                        //Retirer la nouvelle balle
+                        Scene_removeBall(scene, ball);
+                    }
                 }
             }
         }
@@ -149,13 +149,14 @@ int main(int argc, char *argv[])
         cursor_position.x = mousePos.x;
         cursor_position.y = mousePos.y;
 
-        // Récupère la balle la plus proche du curseur
-        neareast_cursor_ball = Scene_getNearestBall(scene, cursor_position);
+        // Récupère les n balles les plus proche du curseur
         Scene_getNearestBalls(scene, cursor_position, nearest_cursor_balls, 2);
 
         // Transforme les coordonnées de la balle en mètres vers des pixels
-        Camera_worldToView(camera, nearest_cursor_balls[0].ball->position, &x, &y);
-        Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 221, 51, 255));
+        for (int i = 0; i < 2; i++) {
+            Camera_worldToView(camera, nearest_cursor_balls[i].ball->position, &x, &y);
+            Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 221, 51, 255));
+        }
 
         // Update the physics engine
         accumulator += Timer_getDelta(timer);
