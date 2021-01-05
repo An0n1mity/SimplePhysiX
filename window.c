@@ -27,7 +27,7 @@ Window *Window_new(int width, int height)
     renderer->m_height = height;
 
     window->m_windowSDL = SDL_CreateWindow(
-        "Simple Physics Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        "PhysiX Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         width, height, SDL_WINDOW_OPENGL);
 
     if (!window->m_windowSDL)
