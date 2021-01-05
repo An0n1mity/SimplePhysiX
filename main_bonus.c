@@ -96,12 +96,25 @@ int main(int argc, char *argv[])
 
             case SDL_KEYDOWN:
                 scanCode = evt.key.keysym.scancode;
-
                 if (evt.key.repeat)
                     break;
 
                 switch (scanCode)
                 {
+                //************************************ Mouvement de caméra*******************************************
+                case SDL_SCANCODE_UP:
+                    Camera_move(camera, Vec2_set(0.f, 1.f));
+                    break;
+                case SDL_SCANCODE_DOWN:
+                    Camera_move(camera, Vec2_set(0.f, -1.f));
+                    break;
+                case SDL_SCANCODE_RIGHT:
+                    Camera_move(camera, Vec2_set(1.f, 0.f));
+                    break;
+                case SDL_SCANCODE_LEFT:
+                    Camera_move(camera, Vec2_set(-1.f, 0.f));
+                    break;
+
                 case SDL_SCANCODE_ESCAPE:
                 case SDL_SCANCODE_BACKSPACE:
                     //*******************Recupere toutes les balles de la scene et les retirés ***********************
