@@ -12,16 +12,15 @@ Ball Ball_set(Vec2 position)
     ball.position = position;
     ball.velocity = Vec2_set(0.f, 0.f);
     ball.mass = 0.5f;
-    ball.friction = 1.0f;
+    ball.friction = 1.5f;
+    ball.is_static = false;
 
     return ball;
 }
 
 int Ball_connect(Ball *ball1, Ball *ball2, float length)
 {
-    if ((ball1 == ball2)
-        || (ball1->nbSprings >= MAX_EDGES)
-        || (ball2->nbSprings >= MAX_EDGES))
+    if ((ball1 == ball2) || (ball1->nbSprings >= MAX_EDGES)|| (ball2->nbSprings >= MAX_EDGES))
         return EXIT_FAILURE;
 
     ball1->springs[ball1->nbSprings].other = ball2;
@@ -116,7 +115,10 @@ void Ball_updateVelocity(Ball *ball, float timeStep)
   Vec2 Velocity = Vec2_add(velocity, Vec2_scale(acceleration, timeStep));
 
   //Update de la balle
-  ball->velocity = Velocity;
+  if (ball->is_static)
+    ball->velocity = Vec2_set(0.f, 0.f);
+  else
+    ball->velocity = Velocity;
 
 }
 
@@ -133,8 +135,8 @@ void Ball_updatePosition(Ball *ball, float timeStep)
 
   //Detection de colision avec le sol
   if(Position.y < 1){
-	ball->velocity.y *= -1;
-	Position.y = 1;
+  	ball->velocity.y *= -1;
+  	Position.y = 1.f;
   }
 
   //Update de la balle
