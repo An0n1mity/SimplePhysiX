@@ -36,14 +36,20 @@ int main(int argc, char *argv[])
     Vec2 mousePos = Vec2_set(0.f, 0.f);
 
     //************************************Creation des la plateforme de base********************************
-    Ball *ball = Scene_addBall(scene, Vec2_set(4.0f, 1.0f));
-    Ball *ball_2 = Scene_addBall(scene, Vec2_set(6.0f, 1.0f));
-    Ball *ball_3 = Scene_addBall(scene, Vec2_set(5.0f, 2.0f));
+    Ball *ball = Scene_addBall(scene, Vec2_set(7.5f, 1.0f));
+    Ball *ball_2 = Scene_addBall(scene, Vec2_set(8.0f, 1.86f));
+    Ball *ball_3 = Scene_addBall(scene, Vec2_set(8.5f, 1.0f));
+
+    // Les balles de la plateforme sont statiques
+    ball->is_static = true;
+    ball_2->is_static = true;
+    ball_3->is_static = true;
 
     // Connexion des balles
     Ball_connect(ball, ball_2, 1);
     Ball_connect(ball_3, ball_2, 1);
     Ball_connect(ball, ball_3, 1);
+
     //********************************************************************************************************
 
     float timeStep = 1.f / 100.f;
@@ -149,7 +155,8 @@ int main(int argc, char *argv[])
         {
             Scene_updateBalls(scene, timeStep);
             accumulator -= timeStep;
-        }
+            }
+            //Oh non une erreur :/
 
         // Render the scene
         Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 255, 255, 255));
@@ -179,5 +186,4 @@ ERROR_LABEL:
     Timer_free(timer);
 
     SDL_quit();
-    return EXIT_FAILURE;
 }
