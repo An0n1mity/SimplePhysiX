@@ -80,8 +80,9 @@ int main(int argc, char *argv[])
                 Score = scene_balls[i].position.y ;
             }
         }
-        //Afficher le Score
         printf("Score : %f\n", Score);
+
+        //*******************************************************************************************************
 
         while (SDL_PollEvent(&evt))
         {
@@ -98,10 +99,9 @@ int main(int argc, char *argv[])
                 scanCode = evt.key.keysym.scancode;
                 if (evt.key.repeat)
                     break;
-
+//************************************ Mouvement de caméra*******************************************
                 switch (scanCode)
                 {
-                //************************************ Mouvement de caméra*******************************************
                 case SDL_SCANCODE_UP:
                     Camera_move(camera, Vec2_set(0.f, 1.f));
                     break;
@@ -114,18 +114,24 @@ int main(int argc, char *argv[])
                 case SDL_SCANCODE_LEFT:
                     Camera_move(camera, Vec2_set(-1.f, 0.f));
                     break;
+//***************************************************************************************************
 
                 case SDL_SCANCODE_ESCAPE:
                 case SDL_SCANCODE_BACKSPACE:
-                    //*******************Recupere toutes les balles de la scene et les retirés ***********************
+
+//*******************Recupere toutes les balles de la scene et les retirés ***********************
+
                     // Recupere le nombre de balles presentent sur la scene
                     nbBalls = Scene_getNbBalls(scene);
+
                     // Recupere le tableau de ces balles
                     Ball *balls_to_remove = Scene_getBalls(scene);
+
                         // Retire toute les balles de la scene
                         for (int i = 0; i < nbBalls; i++) {
                             Scene_removeBall(scene, &balls_to_remove[0]);
                         }
+
                         // Rajoute les balles de base
                         Ball *ball = Scene_addBall(scene, Vec2_set(7.5f, 1.0f));
                         Ball *ball_2 = Scene_addBall(scene, Vec2_set(8.0f, 1.86f));
@@ -139,8 +145,9 @@ int main(int argc, char *argv[])
                         ball->is_static = true;
                         ball_2->is_static = true;
                         ball_3->is_static = true;
-
                     break;
+//**************************************************************************************************
+
                 case SDL_SCANCODE_RETURN:
                     quitLoop = 1;
                     break;
@@ -169,7 +176,7 @@ int main(int argc, char *argv[])
                 break;
             }
 
-            // Action du click gauche
+//********************************Ajout de balle dans la scene***********************************************************
             if(mouseClick)
             {
                 // On crée une balle au niveau du curseur
@@ -183,6 +190,7 @@ int main(int argc, char *argv[])
                         Scene_removeBall(scene, ball);
                 }
             }
+//**************************************************************************************************************************
         }
 
         if (quitLoop)
@@ -191,6 +199,7 @@ int main(int argc, char *argv[])
         // Clear the previous frame
         Renderer_clear(renderer);
 
+        // ***********************************Liaison des balles*************************************************************************
         // Get the mouse position
         Camera_viewToWorld(camera, mouseX, mouseY, &mousePos);
 
@@ -207,7 +216,7 @@ int main(int argc, char *argv[])
             // Dessine une ligne entre le curseur et les balles les plus proches
             Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 221, 51, 255));
         }
-
+        // ********************************************************************************************************************************
         // Update the physics engine
         accumulator += Timer_getDelta(timer);
         while (accumulator >= timeStep)
