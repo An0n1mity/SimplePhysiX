@@ -40,11 +40,6 @@ int main(int argc, char *argv[])
     Ball *ball_2 = Scene_addBall(scene, Vec2_set(8.0f, 1.86f));
     Ball *ball_3 = Scene_addBall(scene, Vec2_set(8.5f, 1.0f));
 
-    // Les balles de la plateforme sont statiques
-    ball->is_static = true;
-    ball_2->is_static = true;
-    ball_3->is_static = true;
-
     // Connexion des balles
     Ball_connect(ball, ball_2, 1);
     Ball_connect(ball_3, ball_2, 1);
@@ -60,6 +55,7 @@ int main(int argc, char *argv[])
 
     Vec2 cursor_position;
     BallQuery neareast_cursor_ball;
+    BallQuery nearest_cursor_balls[2];
     int x, y;
 
     while (!quitLoop)
@@ -71,7 +67,6 @@ int main(int argc, char *argv[])
 
         while (SDL_PollEvent(&evt))
         {
-
             SDL_Scancode scanCode;
             SDL_MouseButtonEvent mouseButton;
 
@@ -117,17 +112,28 @@ int main(int argc, char *argv[])
                     mouseClick = 1;
                 break;
             }
+
             // Action du click gauche
-            if(mouseClick){
-	             // On crée une balle au niveau du curseur
-               Ball *ball = Scene_addBall(scene, Vec2_set(mousePos.x, mousePos.y));
-               // Si trop de ressort relié à la balle la plus proche
-               if(Ball_connect(ball, neareast_cursor_ball.ball, neareast_cursor_ball.distance)){
-                 printf("Too many springs !\n");
-                 //Retirer la nouvelle balle
-                 Scene_removeBall(scene, ball);
-               }
-              }
+            if(mouseClick)
+            {
+                // On crée une balle au niveau du curseur
+                Ball *ball = Scene_addBall(scene, Vec2_set(mousePos.x, mousePos.y));
+                printf("Vous venez de placer une balle !");
+                // Hauteur maximum de la balle posée
+                /*if
+                else
+                    printf("Nouveau record : %f m (%d boules)\n", );*/
+
+
+                // Si trop de ressort relié à la balle la plus proche
+                if(Ball_connect(ball, neareast_cursor_ball.ball, neareast_cursor_ball.distance))
+                {
+                    printf("Too many springs !\n");
+
+                    //Retirer la nouvelle balle
+                    Scene_removeBall(scene, ball);
+                }
+            }
         }
 
         if (quitLoop)
@@ -139,15 +145,17 @@ int main(int argc, char *argv[])
         // Get the mouse position
         Camera_viewToWorld(camera, mouseX, mouseY, &mousePos);
 
-        // Recupere la position du curseur dans le monde
+        // Recupère la position du curseur dans le monde
         cursor_position.x = mousePos.x;
         cursor_position.y = mousePos.y;
 
-        // Recupere la balle la plus proche du curseur
+        // Récupère la balle la plus proche du curseur
         neareast_cursor_ball = Scene_getNearestBall(scene, cursor_position);
+        Scene_getNearestBalls(scene, cursor_position, nearest_cursor_balls, 2);
 
-        // Transforme les coordonnées de la balle de metres vers pixels
-        Camera_worldToView(camera, neareast_cursor_ball.ball->position, &x, &y);
+        // Transforme les coordonnées de la balle en mètres vers des pixels
+        Camera_worldToView(camera, nearest_cursor_balls[0].ball->position, &x, &y);
+        Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 221, 51, 255));
 
         // Update the physics engine
         accumulator += Timer_getDelta(timer);
@@ -156,10 +164,8 @@ int main(int argc, char *argv[])
             Scene_updateBalls(scene, timeStep);
             accumulator -= timeStep;
             }
-            //Oh non une erreur :/
 
         // Render the scene
-        Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 255, 255, 255));
         Scene_renderBalls(scene);
         Renderer_update(renderer);
     }
