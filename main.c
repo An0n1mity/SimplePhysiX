@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 
                 // Si trop de ressort relié à la balle la plus proche
                 for (int i = 0; i < 2; i++) {
-                    if(Ball_connect(ball, nearest_cursor_balls[i].ball, neareast_cursor_balls.distance))
+                    if(Ball_connect(ball, nearest_cursor_balls[i].ball, Vec2_distance(cursor_position, nearest_cursor_balls[i].ball->position)))
                     {
                         printf("Too many springs !\n");
 

@@ -1,5 +1,4 @@
-﻿
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -12,8 +11,7 @@ Ball Ball_set(Vec2 position)
     ball.position = position;
     ball.velocity = Vec2_set(0.f, 0.f);
     ball.mass = 0.5f;
-    ball.friction = 1.5f;
-    ball.is_static = false;
+    ball.friction = 3.f;
 
     return ball;
 }
@@ -115,10 +113,7 @@ void Ball_updateVelocity(Ball *ball, float timeStep)
   Vec2 Velocity = Vec2_add(velocity, Vec2_scale(acceleration, timeStep));
 
   //Update de la balle
-  if (ball->is_static)
-    ball->velocity = Vec2_set(0.f, 0.f);
-  else
-    ball->velocity = Velocity;
+  ball->velocity = Velocity;
 
 }
 
