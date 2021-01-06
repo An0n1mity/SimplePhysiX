@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     Vec2 mousePos = Vec2_set(0.f, 0.f);
 
 //****************************** Creation des la plateforme de base ******************************//
-//************************************************************************************************//
+
     Ball *ball = Scene_addBall(scene, Vec2_set(7.5f, 1.0f));
     Ball *ball_2 = Scene_addBall(scene, Vec2_set(8.0f, 1.86f));
     Ball *ball_3 = Scene_addBall(scene, Vec2_set(8.5f, 1.0f));
@@ -61,20 +61,23 @@ int main(int argc, char *argv[])
     Vec2 cursor_position;
     int x, y, nbBalls, n_nearest_ball = 2;
     float Score=0;
+    Ball *scene_balls;
+    BallQuery nearest_cursor_ball;
 
     while (!quitLoop)
     {
 
         BallQuery nearest_cursor_balls[n_nearest_ball];
         SDL_Event evt;
-        int mouseClick = 0;
+        int mouseClickLeft = 0;
+        int mouseClickRight = 0;
         nbBalls = Scene_getNbBalls(scene);
         Timer_update(timer);
 
 //*************************************** Obtenir le score ***************************************//
 
         // On recupere les balles de la scene dans un tableau
-        Ball *scene_balls = Scene_getBalls(scene);
+        scene_balls = Scene_getBalls(scene);
 
         // On cherche la balle ayant l'ordonné le plus élevé
         for (int i = 0; i < nbBalls; i++)
@@ -82,9 +85,9 @@ int main(int argc, char *argv[])
             if(scene_balls[i].position.y > Score)
             {
                 Score = scene_balls[i].position.y ;
+                printf("Score : %fm\n", Score);
             }
         }
-        printf("Score : %f\n", Score);
 
 //************************************************************************************************//
 
@@ -105,7 +108,7 @@ int main(int argc, char *argv[])
                     break;
 
 //************************************* Mouvement de caméra **************************************//
-//************************************************************************************************//
+
                 switch (scanCode)
                 {
                 case SDL_SCANCODE_UP:
@@ -124,6 +127,10 @@ int main(int argc, char *argv[])
 //************************************************************************************************//
 
                 case SDL_SCANCODE_ESCAPE:
+                quitLoop = 1;
+                break;
+
+//******************** Change le nombre de n balles les plus proches******************************
                 case SDL_SCANCODE_Q:
                     n_nearest_ball ++;
                     if(n_nearest_ball > nbBalls)
@@ -134,9 +141,10 @@ int main(int argc, char *argv[])
                     if(n_nearest_ball < 1)
                         n_nearest_ball = 1;
                     break;
+//************************************************************************************************
 
 //******************* Récupère toutes les balles de la scene et les retire ***********************//
-//************************************************************************************************//
+
                 case SDL_SCANCODE_BACKSPACE:
 
                     // Récupère le nombre de balles présentent sur la scène
@@ -191,13 +199,15 @@ int main(int argc, char *argv[])
                 mouseButton = evt.button;
 
                 if (mouseButton.button == SDL_BUTTON_LEFT)
-                    mouseClick = 1;
+                    mouseClickLeft = 1;
+                if (mouseButton.button == SDL_BUTTON_RIGHT)
+                    mouseClickRight = 1;
                 break;
             }
 
-//******************************** Ajout de balle dans la scene ********************************//
+//********************************* Ajout de balle dans la scene *********************************//
 
-            if(mouseClick)
+            if(mouseClickLeft)
             {
                 // On crée une balle au niveau du curseur
                 Ball *ball = Scene_addBall(scene, Vec2_set(mousePos.x, mousePos.y));
@@ -213,15 +223,20 @@ int main(int argc, char *argv[])
             }
         }
 
-//********************************************************************************************//
-
+//************************************************************************************************//
+//************************************Retire la balle la plus proche******************************//
+            if (mouseClickRight) {
+                nearest_cursor_ball = Scene_getNearestBall(scene, cursor_position);
+                Scene_removeBall(scene, nearest_cursor_ball.ball);
+            }
+//**************************************************************************************************//
         if (quitLoop)
             break;
 
         // Clear the previous frame
         Renderer_clear(renderer);
 
-//*********************************** Liaison des balles ***********************************//
+//************************************** Liaison des balles **************************************//
 
         // Get the mouse position
         Camera_viewToWorld(camera, mouseX, mouseY, &mousePos);
@@ -243,7 +258,7 @@ int main(int argc, char *argv[])
             Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 221, 51, 255));
         }
 
-//****************************************************************************************//
+//************************************************************************************************//
 
         // Update the physics engine
         accumulator += Timer_getDelta(timer);
