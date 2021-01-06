@@ -65,6 +65,8 @@ int main(int argc, char *argv[])
         SDL_Event evt;
         int mouseClick = 0;
         Timer_update(timer);
+        nearest_cursor_ball = Scene_getNearestBall(scene, cursor_position);
+
 
         while (SDL_PollEvent(&evt))
         {
@@ -115,7 +117,7 @@ int main(int argc, char *argv[])
             }
 
             // Action du click gauche
-            if(mouseClick)
+            if(mouseClick && Vec2_distance(cursor_position, nearest_cursor_ball.ball->position) < 1.f)
             {
                 // On crée une balle au niveau du curseur
                 Ball *ball = Scene_addBall(scene, Vec2_set(mousePos.x, mousePos.y));
@@ -150,7 +152,6 @@ int main(int argc, char *argv[])
             // Transforme les coordonnées des balles les plus proches en pixels
             Camera_worldToView(camera, nearest_cursor_balls[i].ball->position, &x, &y);
             // Dessine une ligne entre le curseur et les balles les plus proches
-            nearest_cursor_ball = Scene_getNearestBall(scene, cursor_position);
             if(Vec2_distance(cursor_position, nearest_cursor_ball.ball->position) < 1.f) // Bonus de proposition de balles les plus proches
                 Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 221, 51, 255));
         }
