@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
     Vec2 cursor_position;
     int x, y, nbBalls, n_nearest_ball = 2;
-    float Score=0;
+    float Score = 0, scene_balls_y = 0.f;
     Ball *scene_balls;
     BallQuery nearest_cursor_ball;
 
@@ -82,10 +82,11 @@ int main(int argc, char *argv[])
         // On cherche la balle ayant l'ordonné le plus élevé
         for (int i = 0; i < nbBalls; i++)
         {
-            if(scene_balls[i].position.y > Score)
+            scene_balls_y = floor(100*scene_balls[i].position.y)/100;
+            if(scene_balls_y > Score)
             {
-                Score = scene_balls[i].position.y ;
-                printf("Score : %fm\n", Score);
+                Score = scene_balls_y ;
+                printf("Nouveau record : %.2f m (%d boules) \n", Score, nbBalls);
             }
         }
 
@@ -130,7 +131,8 @@ int main(int argc, char *argv[])
                 quitLoop = 1;
                 break;
 
-//******************** Change le nombre de n balles les plus proches******************************
+//******************** Change le nombre de n balles les plus proches******************************//
+
                 case SDL_SCANCODE_Q:
                     n_nearest_ball ++;
                     if(n_nearest_ball > nbBalls)
@@ -141,7 +143,8 @@ int main(int argc, char *argv[])
                     if(n_nearest_ball < 1)
                         n_nearest_ball = 1;
                     break;
-//************************************************************************************************
+
+//************************************************************************************************//
 
 //******************* Récupère toutes les balles de la scene et les retire ***********************//
 
@@ -171,6 +174,9 @@ int main(int argc, char *argv[])
                         ball->is_static = true;
                         ball_2->is_static = true;
                         ball_3->is_static = true;
+
+                        printf("------- Nouvelle Partie -------\n");
+
                     break;
 
 //************************************************************************************************//
@@ -216,7 +222,7 @@ int main(int argc, char *argv[])
                 for (int i = 0; i < n_nearest_ball; i++)
                 {
                     // Si trop de ressort attaché à la balle
-                    if(Ball_connect(ball, nearest_cursor_balls[i].ball, Vec2_distance(cursor_position, nearest_cursor_balls[i].ball->position)))
+                    if(Ball_connect(ball, nearest_cursor_balls[i].ball, 1))
                         // Retirer la nouvelle balle
                         Scene_removeBall(scene, ball);
                 }
@@ -224,6 +230,7 @@ int main(int argc, char *argv[])
         }
 
 //************************************************************************************************//
+
 //************************************Retire la balle la plus proche******************************//
             if (mouseClickRight) {
                 nearest_cursor_ball = Scene_getNearestBall(scene, cursor_position);
