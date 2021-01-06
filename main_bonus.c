@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
 //************************************************************************************************//
 
 //************************************Retire la balle la plus proche******************************//
-            if (mouseClickRight) {
+            if (mouseClickRight && Vec2_distance(cursor_position, nearest_cursor_ball.ball->position) < 1.f) {
                 nearest_cursor_ball = Scene_getNearestBall(scene, cursor_position);
                 Scene_removeBall(scene, nearest_cursor_ball.ball);
             }
@@ -263,7 +263,7 @@ int main(int argc, char *argv[])
 
             // Dessine une ligne entre le curseur et les balles les plus proches
             nearest_cursor_ball = Scene_getNearestBall(scene, cursor_position);
-            if(Vec2_distance(cursor_position, nearest_cursor_ball.ball->position) < 1.f)
+            if(Vec2_distance(cursor_position, nearest_cursor_ball.ball->position) < 1.f) // Bonus de proposition de balles les plus proches
                 Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 221, 51, 255));
         }
 
