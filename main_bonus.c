@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
 
 //********************************* Ajout de balle dans la scene *********************************//
 
-            if(mouseClickLeft)
+            if(mouseClickLeft  && Vec2_distance(cursor_position, nearest_cursor_ball.ball->position) < 1.f)
             {
                 // On crée une balle au niveau du curseur
                 Ball *ball = Scene_addBall(scene, Vec2_set(mousePos.x, mousePos.y));
