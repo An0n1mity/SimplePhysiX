@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
                 quitLoop = 1;
                 break;
 
-//******************** Change le nombre de n balles les plus proches******************************//
+//************************ Change le nombre de n balles les plus proches *************************//
 
                 case SDL_SCANCODE_Q:
                     n_nearest_ball ++;
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 
 //************************************************************************************************//
 
-//******************* Récupère toutes les balles de la scene et les retire ***********************//
+//*********** [RESTART GAME BONUS] Récupère toutes les balles de la scene et les retire **********//
 
                 case SDL_SCANCODE_BACKSPACE:
 
@@ -262,7 +262,9 @@ int main(int argc, char *argv[])
             Camera_worldToView(camera, nearest_cursor_balls[i].ball->position, &x, &y);
 
             // Dessine une ligne entre le curseur et les balles les plus proches
-            Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 221, 51, 255));
+            nearest_cursor_ball = Scene_getNearestBall(scene, cursor_position);
+            if(Vec2_distance(cursor_position, nearest_cursor_ball.ball->position) < 1.f)
+                Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 221, 51, 255));
         }
 
 //************************************************************************************************//
