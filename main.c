@@ -55,6 +55,8 @@ int main(int argc, char *argv[])
 
     Vec2 cursor_position;
     BallQuery nearest_cursor_balls[2];
+    BallQuery nearest_cursor_ball;
+
     int x, y;
 
     while (!quitLoop)
