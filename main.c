@@ -117,21 +117,13 @@ int main(int argc, char *argv[])
             {
                 // On crée une balle au niveau du curseur
                 Ball *ball = Scene_addBall(scene, Vec2_set(mousePos.x, mousePos.y));
-                // Hauteur maximum de la balle posée
-                /*if
-                else
-                    printf("Nouveau record : %f m (%d boules)\n", );*/
-
 
                 // Si trop de ressort relié à la balle la plus proche
                 for (int i = 0; i < 2; i++) {
+                    // Si trop de ressort attaché à la balle
                     if(Ball_connect(ball, nearest_cursor_balls[i].ball, Vec2_distance(cursor_position, nearest_cursor_balls[i].ball->position)))
-                    {
-                        printf("Too many springs !\n");
-
-                        //Retirer la nouvelle balle
+                        // Retirer la nouvelle balle
                         Scene_removeBall(scene, ball);
-                    }
                 }
             }
         }
@@ -152,10 +144,13 @@ int main(int argc, char *argv[])
         // Récupère les n balles les plus proche du curseur
         Scene_getNearestBalls(scene, cursor_position, nearest_cursor_balls, 2);
 
-        // Transforme les coordonnées de la balle en mètres vers des pixels
         for (int i = 0; i < 2; i++) {
+            // Transforme les coordonnées des balles les plus proches en pixels
             Camera_worldToView(camera, nearest_cursor_balls[i].ball->position, &x, &y);
-            Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 221, 51, 255));
+            // Dessine une ligne entre le curseur et les balles les plus proches
+            nearest_cursor_ball = Scene_getNearestBall(scene, cursor_position);
+            if(Vec2_distance(cursor_position, nearest_cursor_ball.ball->position) < 1.f) // Bonus de proposition de balles les plus proches
+                Renderer_drawLine(renderer, mouseX, mouseY, x, y, Color_set(255, 221, 51, 255));
         }
 
         // Update the physics engine
